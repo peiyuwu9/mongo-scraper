@@ -20,7 +20,7 @@ $(document.body).on("click", "#scraper", function () {
                 var articleTopLeft = $("<div class='col s10'>");
                 var articleTopRight = $("<div class='col s2'>");
                 var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-                var saveIcon = $("<i class='material-icons' id='save' data-id='" + result[i].id + "'>save</i>");
+                var saveIcon = $("<i class='material-icons' id='save' data-id='" + result[i]._id + "'>save</i>");
                 var articleBody = $("<p>" + result[i].articleBody + "</p>");
                 articleTopLeft.append(articleTitle);
                 articleTopRight.append(saveIcon);
@@ -79,7 +79,7 @@ $.ajax({
             var articleTopLeft = $("<div class='col s10'>");
             var articleTopRight = $("<div class='col s2'>");
             var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-            var saveIcon = $("<i class='material-icons' id='remove' data-id='" + result[i].id + "'>delete</i> <i class='material-icons' id='note' data-id='" + result[i].id + "'>event_note</i>");
+            var saveIcon = $("<i class='material-icons' id='unsave' data-id='" + result[i]._id + "'>delete</i> <i class='material-icons' id='note' data-id='" + result[i]._id + "'>event_note</i>");
             var articleBody = $("<p>" + result[i].articleBody + "</p>");
             articleTopLeft.append(articleTitle);
             articleTopRight.append(saveIcon);
@@ -91,7 +91,7 @@ $.ajax({
 
 
 // 5. Unsave articles
-$(document.body).on("click", "#remove", function () {
+$(document.body).on("click", "#unsave", function () {
     $.ajax({
         method: "PUT",
         url: "/unsaveArticles/" + thisId
@@ -108,12 +108,29 @@ $(document.body).on("click", "#remove", function () {
 });
 
 // 6. Show note table
-$(document.body).on("click", "#note", function(){
+$(document.body).on("click", "#note", function () {
     $("#note_form").attr("style", "display: block;");
-    
-
-})
-
+    $a.jax({
+        method: "GET",
+        url: "/article/" + thisId
+    })
+        .then(function (result) {
+            var noteList = $("<div class='row'>")
+            var noteTopLeft = $("<div class='col s11'>");
+            var noteTopRight = $("<div class='col s1'><i class='material-icons' id='escape'>clear</i></div>");
+            var noteTitle = $("<h3> Note for: " + result._id + "</h3>")
+            var hr = $("<hr>");
+            var noteBody = $("<div clasee='note row'>");
+            for (var i = 0; i < result.note[i]; i++) {
+                var note = $("<div class='col s11'><p>" + result.note[i].body + "</p></div>");
+                var icon = $("<div class='col s1'><i class='material-icons' id='delete' data-id='" + result.note[i]._id + "'>delete</i></div>")
+                noteBody.append(note).append(icon);
+            }
+            noteTopLeft.append(noteTitle);
+            noteList.append(noteTopLeft).append(noteTopRight).append(hr).append(noteBody);
+            $("#note_list").append(noteList);
+        });
+});
 
 // 7. Post a note
 $(document.body).on("click", "#submitBtn", function () {
@@ -133,7 +150,28 @@ $(document.body).on("click", "#submitBtn", function () {
             else {
                 console.log(res);
             }
+            location.reload();
         });
 });
 
 // 8. Delete a note
+$(document.body).on("click", "#delete", function () {
+    $.ajax({
+        method: "DELETE",
+        url: "/article/deleteNote/" + thisId
+    })
+        .then(function (err, res) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log(res);
+            }
+            location.reload();
+        });
+})
+
+// 9. Close note list
+$(document.body).on("click", "#escape", function () {
+    $("#note_form").attr("style", "display: none;");
+});

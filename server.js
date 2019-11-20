@@ -123,19 +123,19 @@ app.put("/unsaveArticles/:id", function (req, res) {
         });
 });
 
-//6 . Route to retrieve note for specific article
-app.get("/article/note/:id", function (req, res) {
+// 6. Route to retrieve note for specific article
+app.get("/article/:id", function (req, res) {
     db.Articles.findOne({ _id: req.params.id })
         .populate("note")
-        .then(function (dbArticle) {
-            res.json(dbArticle);
+        .then(function (dbArticleNote) {
+            res.json(dbArticleNote);
         })
         .catch(function (err) {
             res.json(err);
         });
 });
 
-//7 . Route to post a note
+// 7. Route to post a note
 app.post("/article/addNote/:id", function (req, res) {
     db.Note.creare(req.body)
         .then(function (dbNote) {
@@ -149,10 +149,10 @@ app.post("/article/addNote/:id", function (req, res) {
         });
 });
 
-//8 . Route to delete a note
-app.delete("article/deleteNote/:id", function (req, res) {
+// 8. Route to delete a note
+app.delete("/article/deleteNote/:id", function (req, res) {
     db.Note.remove({ _id: req.params.id })
-})
+});
 
 var PORT = process.env.PORT || 3000;
 

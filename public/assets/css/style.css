@@ -1,0 +1,8 @@
+body {
+    background-image: url("../images/newpaper.jpg");
+}
+
+.headline, #warning {
+    height: 300px;
+    text-align: center;
+}
