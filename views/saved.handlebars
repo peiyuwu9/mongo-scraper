@@ -9,12 +9,12 @@
 
 <div class="container">
     <div class="row headline">
-        <h1>Saved Articles</h1>
+        <h1>SAVED ARTICLES</h1>
     </div>
     <div id="warning" class="row" style="display: block;">
-        <p>There is no any article saved.</p>
-        <p>Please go back to save articles.</p>
-        <a href="/"><i class="material-icons" id="home">home</i></a>
+        <h4>There is no any article saved.</h4>
+        <h4>Please go back to save articles.</h4>
+        <a href="/"><i class="medium material-icons" id="home">home</i></a>
     </div>
     <div id="saved_article_display" class="row">
     </div>
@@ -25,12 +25,14 @@
                 </div>
                 <div>
                     <div class="input-field col s12">
-                        <textarea id="note_body" class="materialize-textarea" data-length="200"></textarea>
-                        <label for="note_body">Note Body</label>
+                        <textarea id="note_body" class="materialize-textarea" data-length="200">Please enter note here</textarea>
                     </div>
                 </div>
                 <button id="submitBtn" class="btn waves-effect waves-light btn-small" type="submit">Save Note
                     <i class="material-icons right">save</i>
+                </button>
+                <button id="deleteBtn" class="btn waves-effect waves-light btn-small" type="submit">Delete Note
+                    <i class="material-icons right">delete</i>
                 </button>
             </div>
         </form>

@@ -18,14 +18,14 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-mongoose.connect("mongodb://localhost/populate", { useNewUrlParser: ture });
+mongoose.connect("mongodb://localhost/scraper", { useNewUrlParser: true });
 
 // 0. HTML route to home page
 app.get("/", function (req, res) {
     res.render("index");
 });
 
-// 1. Route to retrieve scraped aticles
+// 1. Route to scrape aticles
 app.get("/scraping", function (req, res) {
     axios.get("https://www.nytimes.com/")
         .then(function (response) {
@@ -34,11 +34,11 @@ app.get("/scraping", function (req, res) {
                 var article = {};
 
                 article.articleTitle = $(this).find("h2").text();
-                article.link = $(this).find("a").attr("href");
+                article.link = "https://www.nytimes.com" + $(this).find("a").attr("href").toString();
                 article.articleBody = $(this).find("p").text();
                 article.saveStatus = false;
 
-                db.Articles.create(article)
+                db.Article.create(article)
                     .then(function () {
                         console.log("Articles Scraped.");
                     })
@@ -46,21 +46,24 @@ app.get("/scraping", function (req, res) {
                         console.log(err);
                     });
             });
+            res.redirect("/");
+        });
+});
+
+// 1.1 Route to get all scraped aticles
+app.get("/scraping/all/articles", function (req, res) {
+    db.Article.find({})
+        .then(function (dbArticle) {
+            res.json(dbArticle);
         })
-        .then(function () {
-            db.Articles.find({})
-                .then(function (dbArticle) {
-                    res.json(dbArticle);
-                })
-                .catch(function (err) {
-                    res.json(err);
-                });
+        .catch(function (err) {
+            res.json(err);
         });
 });
 
 // 2. Route to save the article
 app.put("/saveArticles/:id", function (req, res) {
-    db.Articles.update(
+    db.Article.update(
         {
             _id: req.params.id
         },
@@ -79,7 +82,7 @@ app.put("/saveArticles/:id", function (req, res) {
 
 // 3. Route to delete all articles from Articles collection
 app.delete("/clearAll", function (req, res) {
-    db.Articles.remove({})
+    db.Article.remove({})
         .then(function () {
             res.send("Articles Deleted.");
         })
@@ -95,7 +98,7 @@ app.get("/saved", function (req, res) {
 
 // 4.2 Route to show all saved articles
 app.get("/savedArticles", function (req, res) {
-    db.Articles.find({ saved: true })
+    db.Article.find({ saveStatus: true })
         .then(function (dbArticleSaved) {
             res.json(dbArticleSaved);
         })
@@ -106,7 +109,7 @@ app.get("/savedArticles", function (req, res) {
 
 // 5. Route to unsave articles
 app.put("/unsaveArticles/:id", function (req, res) {
-    db.Articles.update(
+    db.Article.update(
         {
             _id: req.params.id
         },
@@ -123,9 +126,9 @@ app.put("/unsaveArticles/:id", function (req, res) {
         });
 });
 
-// 6. Route to retrieve note for specific article
+// 6. Route to retrieve notes for specific article
 app.get("/article/:id", function (req, res) {
-    db.Articles.findOne({ _id: req.params.id })
+    db.Article.findOne({ _id: req.params.id })
         .populate("note")
         .then(function (dbArticleNote) {
             res.json(dbArticleNote);
@@ -137,21 +140,27 @@ app.get("/article/:id", function (req, res) {
 
 // 7. Route to post a note
 app.post("/article/addNote/:id", function (req, res) {
-    db.Note.creare(req.body)
+    db.Note.create(req.body)
         .then(function (dbNote) {
-            return db.Articles.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+            return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
         })
         .then(function () {
-            console.log("Note added.");
+            res.send("Note added.");
         })
         .catch(function (err) {
-            console.log(err);
+            res.json(err);
         });
 });
 
 // 8. Route to delete a note
 app.delete("/article/deleteNote/:id", function (req, res) {
-    db.Note.remove({ _id: req.params.id })
+    db.Note.deleteOne({ _id: req.params.id })
+    .then(function () {
+        res.send("Note deleted.");
+    })
+    .catch(function (err) {
+        res.json(err);
+    });;
 });
 
 var PORT = process.env.PORT || 3000;

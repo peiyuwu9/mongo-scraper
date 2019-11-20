@@ -5,21 +5,21 @@ var Schema = mongoose.Schema;
 var ArticleSchema = new Schema ({
     articleTitle : {
         type: String,
-        require: true
+        required: true
     },
 
     link: {
         type: String,
-        require: true
+        required: true
     },
 
     articleBody: {
         type: String,
-        require: true
+        // required: true
     },
 
     saveStatus: {
-        type: Boolean,
+        type: Boolean
     },
 
     note: {

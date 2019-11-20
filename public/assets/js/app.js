@@ -2,48 +2,43 @@
 document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('.fixed-action-btn');
     var instances = M.FloatingActionButton.init(elems, {
-        direction: 'right'
+        direction: 'left'
     });
 });
 
-// 1. Scraping button function
-$(document.body).on("click", "#scraper", function () {
-    $("#article_display").empty();
-    $.ajax({
-        method: "Get",
-        url: "/scraping"
-    })
-        .then(function (result) {
-            for (var i = 0; i < result.length; i++) {
-                var article = $("<div class='col s4'>");
-                var articleTop = $("<div class='row'>");
-                var articleTopLeft = $("<div class='col s10'>");
-                var articleTopRight = $("<div class='col s2'>");
-                var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-                var saveIcon = $("<i class='material-icons' id='save' data-id='" + result[i]._id + "'>save</i>");
-                var articleBody = $("<p>" + result[i].articleBody + "</p>");
-                articleTopLeft.append(articleTitle);
-                articleTopRight.append(saveIcon);
-                articleTop.append(articleTopLeft).append(articleTopRight);
-                article.append(articleTop).append(articleBody);
-                $("#article_display").append(article);
-            }
-        });
-});
+// 1.1 Get all scraped articles
+$.ajax({
+    method: "Get",
+    url: "/scraping/all/articles"
+})
+    .then(function (result) {
+        $("#article_display").empty();
+        for (var i = 0; i < result.length; i++) {
+            var article = $("<div class='col s4'>");
+            var articleTop = $("<div class='row'>");
+            var articleTopLeft = $("<div class='col s10'>");
+            var articleTopRight = $("<div class='col s2'>");
+            var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
+            var saveIcon = $("<i class='material-icons' id='save' data-id='" + result[i]._id + "'>save</i>");
+            var articleBody = $("<p>" + result[i].articleBody + "</p>");
+            articleTopLeft.append(articleTitle);
+            articleTopRight.append(saveIcon);
+            articleTop.append(articleTopLeft).append(articleTopRight);
+            article.append(articleTop).append(articleBody);
+            $("#article_display").append(article);
+        }
+    });
 
 // 2. Save article function
 $(document.body).on("click", "#save", function () {
+    var id = $(this).data("id");
+    console.log(id);
     $.ajax({
         method: "PUT",
-        url: "/saveArticles/" + thisId
+        url: "/saveArticles/" + id
     })
-        .then(function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log(res);
-            }
+        .then(function (res) {
+            console.log(res);
         });
 });
 
@@ -54,13 +49,8 @@ $(document.body).on("click", "#delete", function () {
         method: "DELETE",
         url: "/clearAll"
     })
-        .then(function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log(res);
-            }
+        .then(function (res) {
+            console.log(res);
             location.reload();
         });
 });
@@ -71,6 +61,7 @@ $.ajax({
     url: "/savedArticles"
 })
     .then(function (result) {
+        console.log(result);
         $("#warning").attr("style", "display: none;");
         $("#saved_article_display").empty();
         for (var i = 0; i < result.length; i++) {
@@ -79,7 +70,7 @@ $.ajax({
             var articleTopLeft = $("<div class='col s10'>");
             var articleTopRight = $("<div class='col s2'>");
             var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-            var saveIcon = $("<i class='material-icons' id='unsave' data-id='" + result[i]._id + "'>delete</i> <i class='material-icons' id='note' data-id='" + result[i]._id + "'>event_note</i>");
+            var saveIcon = $("<i class='material-icons' id='unsave' data-id='" + result[i]._id + "'>delete</i> <i class='material-icons' id='note' data-id='" + result[i]._id + "' note-id='" + result[i].note + "'>event_note</i>");
             var articleBody = $("<p>" + result[i].articleBody + "</p>");
             articleTopLeft.append(articleTitle);
             articleTopRight.append(saveIcon);
@@ -92,17 +83,13 @@ $.ajax({
 
 // 5. Unsave articles
 $(document.body).on("click", "#unsave", function () {
+    var id = $(this).data("id");
     $.ajax({
         method: "PUT",
-        url: "/unsaveArticles/" + thisId
+        url: "/unsaveArticles/" + id
     })
-        .then(function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log(res);
-            }
+        .then(function (res) {
+            console.log(res);
             location.reload();
         });
 });
@@ -110,63 +97,60 @@ $(document.body).on("click", "#unsave", function () {
 // 6. Show note table
 $(document.body).on("click", "#note", function () {
     $("#note_form").attr("style", "display: block;");
-    $a.jax({
+    var id = $(this).data("id");
+    $("#submitBtn").attr("data-id", id);
+    var noteId = $(this).attr("note-id");
+    $("#deleteBtn").attr("data-id", noteId);
+    $.ajax({
         method: "GET",
-        url: "/article/" + thisId
+        url: "/article/" + id
     })
         .then(function (result) {
+            $("#note_list").empty();
+            console.log(result);
             var noteList = $("<div class='row'>")
             var noteTopLeft = $("<div class='col s11'>");
             var noteTopRight = $("<div class='col s1'><i class='material-icons' id='escape'>clear</i></div>");
-            var noteTitle = $("<h3> Note for: " + result._id + "</h3>")
-            var hr = $("<hr>");
-            var noteBody = $("<div clasee='note row'>");
-            for (var i = 0; i < result.note[i]; i++) {
-                var note = $("<div class='col s11'><p>" + result.note[i].body + "</p></div>");
-                var icon = $("<div class='col s1'><i class='material-icons' id='delete' data-id='" + result.note[i]._id + "'>delete</i></div>")
-                noteBody.append(note).append(icon);
-            }
+            var noteTitle = $("<h5> Note for: " + result._id + "</h5>");
             noteTopLeft.append(noteTitle);
-            noteList.append(noteTopLeft).append(noteTopRight).append(hr).append(noteBody);
+            noteList.append(noteTopLeft).append(noteTopRight);
             $("#note_list").append(noteList);
+            console.log(result.note);
+            if (result.note) {
+                $("#note_body").val(result.note.body);
+            }
+            else {
+                $("#note_body").val("Please enter note here");
+            }
         });
 });
 
 // 7. Post a note
-$(document.body).on("click", "#submitBtn", function () {
+$(document.body).on("click", "#submitBtn", function (event) {
     event.preventDefault();
     var newNote = {
-        noteBody: $("#note_body").val().trim()
+        body: $("#note_body").val().trim()
     };
+    var id = $(this).data("id");
     $.ajax({
         method: "POST",
-        url: "/article/addNote/" + thisId,
+        url: "/article/addNote/" + id,
         data: newNote
     })
-        .then(function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log(res);
-            }
-            location.reload();
+        .then(function (res) {
+            console.log(res);
         });
 });
 
 // 8. Delete a note
-$(document.body).on("click", "#delete", function () {
+$(document.body).on("click", "#deleteBtn", function () {
+    var id = $(this).data("id");
     $.ajax({
         method: "DELETE",
-        url: "/article/deleteNote/" + thisId
+        url: "/article/deleteNote/" + id
     })
-        .then(function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log(res);
-            }
+        .then(function (res) {
+            console.log(res);
             location.reload();
         });
 })
