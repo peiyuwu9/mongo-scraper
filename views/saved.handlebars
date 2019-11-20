@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row headline">
+        <h1>Saved Articles</h1>
+    </div>
+    <div id="warning" class="row" style="display: block;">
+        <p>There is no any article saved.</p>
+        <p>Please go back to save articles</p>
+        <a href="/"><i class="material-icons" id="home">home</i></a>
+    </div>
+    <div id="saved_article_display" class="row">
+    </div>
+    <div id="note_form" class="row" style="display: none;">
+        <form class="col s12">
+            <div class="row">
+                <div id="note_list" class="col s12">
+                </div>
+                <div>
+                    <div class="input-field col s12">
+                        <textarea id="note_body" class="materialize-textarea" data-length="200"></textarea>
+                        <label for="note_body">Note Body</label>
+                    </div>
+                </div>
+                <button id="submitBtn" class="btn waves-effect waves-light btn-small" type="submit">Save Note
+                    <i class="material-icons right">save</i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
