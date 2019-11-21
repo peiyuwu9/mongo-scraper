@@ -1,7 +1,7 @@
 body {
-    /* background-image: url("../images/newpaper.jpg");
+    background-image: url("../images/newpaper.jpg");
     background-color: #424242;
-    background-blend-mode: hard-light; */
+    background-blend-mode: hard-light;
 }
 
 .brand-logo {
@@ -32,6 +32,44 @@ h1 {
     background: white;
 }
 
-button:hover {
-
+button:hover, .clickIcon:hover {
+    cursor: pointer;
 }
+
+h5 {
+    color: black;
+}
+
+.article {
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.box {
+    background: white;
+    height: 300px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.clickIcon {
+    margin-top: 5px;
+}
+
+#note_form {
+    width: 60%;
+    position: fixed;
+    z-index: 1;
+    top: 150px;
+    left: 15%;
+}
+
+form {
+    background: white;
+    padding: 5px;
+}
+
+#btn_area {
+    text-align: center;
+}
+

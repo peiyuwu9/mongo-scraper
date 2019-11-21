@@ -8,7 +8,7 @@
 </nav>
 
 <div class="container">
-    <div class="row headline">
+    <div class="row headline opacity">
         <h1>SAVED ARTICLES</h1>
     </div>
     <div id="warning" class="row" style="display: block;">
@@ -16,23 +16,24 @@
         <h4>Please go back to save articles.</h4>
         <a href="/"><i class="medium material-icons" id="home">home</i></a>
     </div>
-    <div id="saved_article_display" class="row">
+    <div id="saved_article_display" class="row opacity">
     </div>
     <div id="note_form" class="row" style="display: none;">
-        <form class="col s12">
+        <form class="col s10 offset-s2">
             <div class="row">
                 <div id="note_list" class="col s12">
                 </div>
-                <div>
-                    <div class="input-field col s12">
-                        <textarea id="note_body" class="materialize-textarea" data-length="200">Please enter note here</textarea>
-                    </div>
+                <div class="input-field col s12">
+                    <textarea id="note_body" class="materialize-textarea"
+                        data-length="200">Please enter note here</textarea>
                 </div>
-                <button id="submitBtn" class="btn waves-effect waves-light btn-small" type="submit">Save Note
-                    <i class="material-icons right">save</i>
-                </button>
-                <button id="deleteBtn" class="btn waves-effect waves-light btn-small" type="submit">Delete Note
-                    <i class="material-icons right">delete</i>
+                <div id="btn_area" class="col s12">
+                    <button id="submitBtn" class="btn waves-effect waves-light btn-small" type="submit">Save Note
+                        <i class="material-icons right">save</i>
+                    </button>
+                    <button id="deleteBtn" class="btn waves-effect waves-light btn-small" type="submit">Delete Note
+                        <i class="material-icons right">delete</i>
+                </div>
                 </button>
             </div>
         </form>

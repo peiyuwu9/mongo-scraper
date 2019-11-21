@@ -14,17 +14,19 @@ $.ajax({
     .then(function (result) {
         $("#article_display").empty();
         for (var i = 0; i < result.length; i++) {
-            var article = $("<div class='col s4'>");
+            var article = $("<div class='col s4 article'>");
+            var box = $("<div class='box'>")
             var articleTop = $("<div class='row'>");
             var articleTopLeft = $("<div class='col s10'>");
             var articleTopRight = $("<div class='col s2'>");
-            var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-            var saveIcon = $("<i class='material-icons' id='save' data-id='" + result[i]._id + "'>save</i>");
+            var articleTitle = $("<a href='" + result[i].link + "'><h5>" + result[i].articleTitle + "</h5></a>");
+            var saveIcon = $("<i class='material-icons clickIcon' id='save' data-id='" + result[i]._id + "'>save</i>");
             var articleBody = $("<p>" + result[i].articleBody + "</p>");
             articleTopLeft.append(articleTitle);
             articleTopRight.append(saveIcon);
             articleTop.append(articleTopLeft).append(articleTopRight);
-            article.append(articleTop).append(articleBody);
+            box.append(articleTop).append(articleBody);
+            article.append(box);
             $("#article_display").append(article);
         }
     });
@@ -62,21 +64,25 @@ $.ajax({
 })
     .then(function (result) {
         console.log(result);
-        $("#warning").attr("style", "display: none;");
-        $("#saved_article_display").empty();
-        for (var i = 0; i < result.length; i++) {
-            var article = $("<div class='col s4'>");
-            var articleTop = $("<div class='row'>");
-            var articleTopLeft = $("<div class='col s10'>");
-            var articleTopRight = $("<div class='col s2'>");
-            var articleTitle = $("<a href='" + result[i].link + "'><h3>" + result[i].articleTitle + "</h3></a>");
-            var saveIcon = $("<i class='material-icons' id='unsave' data-id='" + result[i]._id + "'>delete</i> <i class='material-icons' id='note' data-id='" + result[i]._id + "' note-id='" + result[i].note + "'>event_note</i>");
-            var articleBody = $("<p>" + result[i].articleBody + "</p>");
-            articleTopLeft.append(articleTitle);
-            articleTopRight.append(saveIcon);
-            articleTop.append(articleTopLeft).append(articleTopRight);
-            article.append(articleTop).append(articleBody);
-            $("#saved_article_display").append(article);
+        if (result.length !== 0) {
+            $("#warning").attr("style", "display: none;");
+            $("#saved_article_display").empty();
+            for (var i = 0; i < result.length; i++) {
+                var article = $("<div class='col s4'>");
+                var box = $("<div class='box'>")
+                var articleTop = $("<div class='row'>");
+                var articleTopLeft = $("<div class='col s10'>");
+                var articleTopRight = $("<div class='col s2'>");
+                var articleTitle = $("<a href='" + result[i].link + "'><h5>" + result[i].articleTitle + "</h5></a>");
+                var saveIcon = $("<i class='material-icons clickIcon' id='unsave' data-id='" + result[i]._id + "'>delete</i> <i class='material-icons clickIcon' id='note' data-id='" + result[i]._id + "' note-id='" + result[i].note + "'>event_note</i>");
+                var articleBody = $("<p>" + result[i].articleBody + "</p>");
+                articleTopLeft.append(articleTitle);
+                articleTopRight.append(saveIcon);
+                articleTop.append(articleTopLeft).append(articleTopRight);
+                box.append(articleTop).append(articleBody);
+                article.append(box);
+                $("#saved_article_display").append(article);
+            }
         }
     });
 
@@ -97,6 +103,7 @@ $(document.body).on("click", "#unsave", function () {
 // 6. Show note table
 $(document.body).on("click", "#note", function () {
     $("#note_form").attr("style", "display: block;");
+    $(".opacity").attr("style", "opacity: 0.5;");
     var id = $(this).data("id");
     $("#submitBtn").attr("data-id", id);
     var noteId = $(this).attr("note-id");
@@ -110,7 +117,7 @@ $(document.body).on("click", "#note", function () {
             console.log(result);
             var noteList = $("<div class='row'>")
             var noteTopLeft = $("<div class='col s11'>");
-            var noteTopRight = $("<div class='col s1'><i class='material-icons' id='escape'>clear</i></div>");
+            var noteTopRight = $("<div class='col s1'><i class='material-icons clickIcon' id='escape'>clear</i></div>");
             var noteTitle = $("<h5> Note for: " + result._id + "</h5>");
             noteTopLeft.append(noteTitle);
             noteList.append(noteTopLeft).append(noteTopRight);
@@ -158,4 +165,5 @@ $(document.body).on("click", "#deleteBtn", function () {
 // 9. Close note list
 $(document.body).on("click", "#escape", function () {
     $("#note_form").attr("style", "display: none;");
+    $(".opacity").attr("style", "opacity: 1;");
 });
