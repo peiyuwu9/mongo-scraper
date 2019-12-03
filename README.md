@@ -5,7 +5,7 @@ Create a web app to scrape news from New York Times by using Cheerio and save th
 Create an application to practice MogoDB, Mongoose.js and Cheerio.js.
 
 ## Technologies used and why
-**HTML** and **SCC** are used to build browser content.  
+**HTML** and **CSS** are used to build browser content.  
 **Handlebars** is used to interprete html files.  
 **Javascript** is used to build user server, download external data, and communicate with MonogoDB.   
 **Node.js** is an environment to execute javascript in terminal.  
