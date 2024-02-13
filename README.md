@@ -4,7 +4,7 @@ Create a web app to scrape news from New York Times by using Cheerio and save th
 ## Motivation
 Create an application to practice MogoDB, Mongoose.js and Cheerio.js.
 
-## Technologies used and why
+## Technologies Used and Why
 **HTML** and **CSS** are used to build browser content.  
 **Handlebars** is used to interprete html files.  
 **Javascript** is used to build user server, download external data, and communicate with MonogoDB.   
@@ -13,12 +13,8 @@ Create an application to practice MogoDB, Mongoose.js and Cheerio.js.
 **Mongoose.js** is used to connect MongoDB.  
 **Cheerio.js** is use to download external data.
 
-## How to use
+## How to Use
 1. Once log in this website, you will be able to scrape news from New York Times website.
-
 2. You are able to save articles.
-
 3. When you enter saved page, you can see all articles you saved ot unsave the articles.
-
 4. You can also create and delete notes. 
-
